@@ -72,7 +72,7 @@ jobs:
         context: ./backend/StockTrader.API
         file: ./backend/StockTrader.API/Dockerfile
         push: true
-        tags: ghcr.io/laHonda27/stocktrader/stocktrader-api:latest
+        tags: ghcr.io/lahonda27/stocktrader/stocktrader-api:latest
 
     - name: 🐳 Build and push Frontend Docker image
       uses: docker/build-push-action@v5
