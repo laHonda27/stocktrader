@@ -8,8 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME_API: laHonda27/stocktrader/stocktrader-api
-  IMAGE_NAME_FRONTEND: laHonda27/stocktrader/stocktrader-frontend
+  IMAGE_NAME_API: lahonda27/stocktrader/stocktrader-api
+  IMAGE_NAME_FRONTEND: lahonda27/stocktrader/stocktrader-frontend
 
 jobs:
   test-and-validate:
@@ -80,7 +80,7 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         push: true
-        tags: ghcr.io/laHonda27/stocktrader/stocktrader-frontend:latest
+        tags: ghcr.io/lahonda27/stocktrader/stocktrader-frontend:latest
 
   # 🎯 Release avec permissions correctes
   create-release:
@@ -118,7 +118,7 @@ jobs:
           
           ```bash
           # Une seule commande pour tout lancer :
-          curl -fsSL https://raw.githubusercontent.com/laHonda27/stocktrader/main/quick-start.sh | bash
+          curl -fsSL https://raw.githubusercontent.com/lahonda27/stocktrader/main/quick-start.sh | bash
           ```
           
           ## 🔗 Accès direct
@@ -134,19 +134,19 @@ jobs:
           - ✅ **Container**: Docker + Docker Compose
           
           ## 📦 Images Docker
-          - API: `ghcr.io/laHonda27/stocktrader/stocktrader-api:latest`
-          - Frontend: `ghcr.io/laHonda27/stocktrader/stocktrader-frontend:latest`
+          - API: `ghcr.io/lahonda27/stocktrader/stocktrader-api:latest`
+          - Frontend: `ghcr.io/lahonda27/stocktrader/stocktrader-frontend:latest`
           
           ## 🚀 Utilisation
           
           ### Option 1: Script automatique
           ```bash
-          curl -fsSL https://raw.githubusercontent.com/laHonda27/stocktrader/main/quick-start.sh | bash
+          curl -fsSL https://raw.githubusercontent.com/lahonda27/stocktrader/main/quick-start.sh | bash
           ```
           
           ### Option 2: Docker Compose manuel
           ```bash
-          curl -o docker-compose.yml https://raw.githubusercontent.com/laHonda27/stocktrader/main/docker-compose.production.yml
+          curl -o docker-compose.yml https://raw.githubusercontent.com/lahonda27/stocktrader/main/docker-compose.production.yml
           docker-compose up -d
           ```
           
