@@ -5,7 +5,6 @@ import { Portfolio } from '../types';
 import { Wallet, TrendingUp, TrendingDown, Activity, BarChart3 } from 'lucide-react';
 
 const PortfolioPage: React.FC = () => {
-  const { user } = useAuth();
   const [portfolio, setPortfolio] = useState<Portfolio[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

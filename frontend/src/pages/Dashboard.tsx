@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { portfolioService } from '../services/api';
 import { useRealtimeStocks } from '../hooks/useRealtimeStocks';
 import PriceDisplay from '../components/PriceDisplay';
-import { Wallet, TrendingUp, TrendingDown, Activity, BarChart3, Users, DollarSign, Eye, ShoppingCart } from 'lucide-react';
+import { Wallet, TrendingUp, TrendingDown, Activity, BarChart3, Users, ShoppingCart } from 'lucide-react';
 
 interface DashboardStats {
   totalValue: number;

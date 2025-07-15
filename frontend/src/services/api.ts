@@ -1,7 +1,6 @@
 ﻿import axios from 'axios';
 import { AuthResponse, LoginRequest, RegisterRequest, Stock, Portfolio, Transaction } from '../types';
 
-// ⚠️ IMPORTANT : Remplace par le port de ton API (regarde dans la console quand tu lances dotnet run)
 const API_BASE_URL = 'http://localhost:5172/';
 
 const api = axios.create({
