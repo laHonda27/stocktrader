@@ -22,7 +22,7 @@ services:
 
   # API Backend (image depuis GitHub Registry)
   api:
-    image: ghcr.io/laHonda27/stocktrader/stocktrader-api:latest
+    image: ghcr.io/lahonda27/stocktrader/stocktrader-api:latest
     container_name: stocktrader-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
@@ -41,7 +41,7 @@ services:
 
   # Frontend React (image depuis GitHub Registry)
   frontend:
-    image: ghcr.io/laHonda27/stocktrader/stocktrader-frontend:latest
+    image: ghcr.io/lahonda27/stocktrader/stocktrader-frontend:latest
     container_name: stocktrader-frontend
     ports:
       - "3000:3000"
