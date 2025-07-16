@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using StockTrader.API.Data;
-using StockTrader.API.Services;
 using StockTrader.API.Hubs;
+using StockTrader.API.Models;
+using StockTrader.API.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // 🆕 Créer la base de données automatiquement
+// 🆕 Créer la base de données automatiquement
 using (var scope = app.Services.CreateScope())
 {
     try
@@ -78,7 +80,7 @@ using (var scope = app.Services.CreateScope())
 
         // Attendre que SQL Server soit prêt
         var retryCount = 0;
-        var maxRetries = 30; // 30 * 2 = 60 secondes max
+        var maxRetries = 30;
 
         while (retryCount < maxRetries)
         {
@@ -91,7 +93,7 @@ using (var scope = app.Services.CreateScope())
             {
                 retryCount++;
                 Console.WriteLine($"Tentative de connexion à la base de données ({retryCount}/{maxRetries})...");
-                await Task.Delay(2000); // Attendre 2 secondes
+                await Task.Delay(2000);
             }
         }
 
@@ -102,17 +104,72 @@ using (var scope = app.Services.CreateScope())
 
         Console.WriteLine("✅ Connexion à la base de données réussie");
 
-        // Créer/migrer la base de données
-        await context.Database.MigrateAsync();
-        Console.WriteLine("✅ Base de données créée/mise à jour");
+        // 🔧 Vérifier si la base existe déjà
+        var databaseExists = await context.Database.CanConnectAsync();
+
+        if (databaseExists)
+        {
+            // Vérifier si des migrations sont en attente
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+
+            if (pendingMigrations.Any())
+            {
+                Console.WriteLine("🔄 Application des migrations en attente...");
+                await context.Database.MigrateAsync();
+                Console.WriteLine("✅ Migrations appliquées");
+            }
+            else
+            {
+                Console.WriteLine("✅ Base de données déjà à jour");
+            }
+        }
+        else
+        {
+            // Créer la base de données pour la première fois
+            Console.WriteLine("🆕 Création de la base de données...");
+            await context.Database.EnsureCreatedAsync();
+            Console.WriteLine("✅ Base de données créée");
+        }
+
+        // 🌱 Ajouter des données de test si la base est vide
+        if (!await context.Stocks.AnyAsync())
+        {
+            Console.WriteLine("🌱 Ajout des données de test...");
+
+            var stocks = new[]
+            {
+                new Stock { Symbol = "AAPL", Name = "Apple Inc.", CurrentPrice = 150.00m },
+                new Stock { Symbol = "GOOGL", Name = "Alphabet Inc.", CurrentPrice = 2500.00m },
+                new Stock { Symbol = "MSFT", Name = "Microsoft Corporation", CurrentPrice = 300.00m },
+                new Stock { Symbol = "AMZN", Name = "Amazon.com Inc.", CurrentPrice = 3200.00m },
+                new Stock { Symbol = "TSLA", Name = "Tesla Inc.", CurrentPrice = 800.00m }
+            };
+
+            await context.Stocks.AddRangeAsync(stocks);
+            await context.SaveChangesAsync();
+            Console.WriteLine("✅ Données de test ajoutées");
+        }
     }
     catch (Exception ex)
     {
         Console.WriteLine($"❌ Erreur lors de l'initialisation de la base de données : {ex.Message}");
-        throw;
+
+        // 🔧 En cas d'erreur, essayer de recréer la base
+        try
+        {
+            Console.WriteLine("🔄 Tentative de recréation de la base de données...");
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+            Console.WriteLine("✅ Base de données recréée avec succès");
+        }
+        catch (Exception recreateEx)
+        {
+            Console.WriteLine($"❌ Impossible de recréer la base : {recreateEx.Message}");
+            throw;
+        }
     }
 }
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
