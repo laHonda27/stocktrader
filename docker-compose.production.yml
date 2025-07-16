@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # Base de données SQL Server
-  sqlserver:
+  database:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: stocktrader-database
     environment:
